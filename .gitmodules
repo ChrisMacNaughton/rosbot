@@ -1,0 +1,6 @@
+[submodule "php/handlers/vendor/m4tthumphrey/php-gitlab-api"]
+	path = php/handlers/vendor/m4tthumphrey/php-gitlab-api
+	url = https://github.com/m4tthumphrey/php-gitlab-api.git
+[submodule "php/handlers/vendor/ffogarasi/rocket-chat-api"]
+	path = php/handlers/vendor/ffogarasi/rocket-chat-api
+	url = https://github.com/ffogarasi/rocket-chat-api

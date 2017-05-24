@@ -1,0 +1,38 @@
+#!/bin/bash 
+SELF_PATH="$(dirname "$(readlink -f "$0")")"; cd $SELF_PATH;
+TMPFILE="/tmp/.handler.$(whoami)"
+DEBUG=1
+
+_log(){
+  which logger &>/dev/null && logger -t hubot -p local3.notice "$*"; return 0
+}
+
+_usage(){
+  str="available commands:\n"
+  str="$str""$(ls "$SELF_PATH/handlers" | awk '{print "  "$1}' )"
+  echo -e "$str"
+}
+
+is_function() {
+  ls $SELF_PATH/handlers/$1* &>/dev/null && return 0 || return 1
+}
+
+check_error(){
+  [[ ! X"$(wc -c "$1" | cut -d" " -f1)" = X"0" ]] && {
+    echo "please check the logs, the command was unsuccesfull :/"
+    cat "$1" | while read line; do _log "$line"; done
+  }
+}
+
+_log "$*"
+
+# only process if not included by other script
+me="$(basename "$0")"; me="${me/\.\/}"
+if [[ "$me" == "handler" ]]; then 
+  _log "$*"
+  handler2="handlers/$1"
+  _log "/usr/bin/php -f /opt/rosbot/myhubot/php/$handler"
+  [[ -f "$handler2" ]] && shift &&  /usr/bin/php -f /opt/rosbot/myhubot/php/$handler2 " $2 $@ " ;
+  [[ ! -n $1 ]] && _usage 
+fi
+exit 0

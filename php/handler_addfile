@@ -1,0 +1,40 @@
+#!/bin/bash 
+
+_log(){
+  which logger &>/dev/null && logger -t hubot -p local3.notice "$*"; return 0
+}
+
+
+check_error(){
+  [[ ! X"$(wc -c "$1" | cut -d" " -f1)" = X"0" ]] && {
+    echo "please check the logs, the command was unsuccesfull :/"
+    cat "$1" | while read line; do _log "$line"; done
+  }
+}
+REPO=${1}
+NAMESPACE=${2}
+TMPFILE=${3}
+FILE=${4}
+
+
+timestamp=$(date +"%Y-%m-%d_%H-%M-%S")
+
+cd /opt/repositories_for_email_notes
+if [ -d $REPO ]; then
+	cd $REPO
+else
+	echo git clone -q ssh://git@webserver/$NAMESPACE/$REPO.git 
+	cd $REPO
+fi
+pwd
+git pull
+
+cp $TMPFILE notes/$FILE
+
+
+git add notes/$FILE  > /dev/null
+git config --global push.default simple
+git commit -a -m 'automatic create by rosbot'  > /dev/null
+git push -q > /dev/null
+
+exit 0

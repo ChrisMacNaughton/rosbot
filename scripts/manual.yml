@@ -1,0 +1,435 @@
+sections:
+  - &alias_kanboard 
+    name: kanboard 
+    desc: Kanboard command help list
+
+  - &alias_hashing
+    name: hashing
+    desc: Hashing command help list
+
+  - &alias_pentesting
+    name: pentesting
+    desc: Pentesting command help list
+
+  - &alias_dummy
+    name: dummy
+    desc: Dummy placeholder, change to target section category
+
+  - &alias_offerte
+    name: offerte
+    desc: Offerte command help list
+
+  - &alias_fun
+    name: fun 
+    desc: Fun command help list
+
+manuals:
+  - name: text messages with 46elks.com
+    section: *alias_dummy
+    desc: Allows hubot to send text messages using 46elk.com API
+    detail: |
+       hubot bing me <query> - Bings <query> & returns 1st result's URL
+       hubot <user> has phone number <phone> - Sets the phone number of <user> to <phone>
+       hubot give me the phone number to <user> - Gets the phone number of <user>
+
+  - name: advice from http://adviceslip.com/
+    section: *alias_dummy
+    desc: Get free advice from http://adviceslip.com/
+    detail: |
+      hubot what should I do about (.*)
+      hubot what do you think about (.*)
+      hubot how do you handle (.*)
+      hubot I need some advice
+
+  - name: alice for hubot
+    section: *alias_dummy
+    desc: Alice for hubot
+    detail: |
+      hubot discuss (with me) - Creates a new conversation
+      hubot talk (with/to me) - Creates a new conversation 
+      hubot discuss cancel - Cancels the conversation 
+      hubot sst - Cancels the conversation 
+      hubot discuss goodbye - Cancels the conversation 
+
+  - name: return url of first bing query hit
+    section: *alias_dummy
+    desc: Returns URL of the first bing hit for a query
+    detail: |
+      hubot bing me <query> - Bings <query> & returns 1st result's URL
+
+  - name: devops reactions
+    section: *alias_dummy
+    desc: DevOps reactions
+
+  - name: suggest a phrase google
+    section: *alias_dummy
+    desc: Hubot completes a phrase with google
+
+  - name: darts
+    section: *alias_fun
+    desc: | 
+      - Have an office dart fight, even when working from home
+
+  - name: email
+    section: *alias_dummy
+    desc: Email from hubot to any address
+    detail: |
+      <user@email.com> -s <subject> -m <message> Sends email with the <subject> <message> to address <user@email.com>
+
+  - name: evaluate code
+    section: *alias_dummy
+    desc: Evaluate code
+    detail: |
+      hubot eval me <lang> <code> - evaluate <code> and show the result
+      hubot eval on <lang> - start recording
+      hubot eval off|finish|done - evaluate recorded <code> and show the result
+      hubot eval cancel - cancel recording
+      hubot eval list - list available languages 
+
+  - name: google search API
+    section: *alias_dummy
+    desc: A way to interact with the Google Custom Search API
+    detail: (google|search)( me) <query> - returns URL's and Title's for 5 first results from custom search
+
+  - name: cards against humanity
+    section: *alias_fun
+    desc: |
+      - Play cards against humanity in hubot
+    detail: |
+      q card - Returns a questions
+      card me - Displays an answer
+      card 2 - Displays two answers for questions with two blanks
+
+  - name: google me
+    section: *alias_dummy
+    desc: Returns the URL of the first google hit for a query
+    detail: |
+      google me <query> - Googles <query> & returns 1st result's URL
+
+  - name: nmap scan
+    section: *alias_pentesting
+    desc: Script for scanning a target with nmap
+    detail: |
+      rosbot nmap help - Prints quick usage help
+      rosbot nmap <quick|full> <target_IP(s)> <project_name*> - Launches nmap scan against the given target. Pushes results to Gitlabs after successful run. Use 'nosave' as project name to bypass Gitlab (do scan only, return results to the RC).
+
+  - name: phish
+    section: *alias_dummy
+    desc: Phishing report from hubot
+
+  - name: project status
+    section: *alias_dummy
+    desc: Project management commands
+    detail: |
+      project status [projectName|projectType] - Show status line of project(s)  
+
+  - name: manual scripting
+    section: *alias_dummy
+    desc: Show manual sections
+    detail: |
+      man - show manual sections
+      man section _NAME_ - show manual sections
+      man CMD - show usage for CMD
+      man CMD detail - show CMD usage detail (id CMD have detail option)
+
+  - name: hubot tracks honor points of co workers
+    section: *alias_fun
+    desc: |
+      - Let hubot track your co-workers honor points
+    detail: |
+      <name>++ - Increment <name>'s point
+      <name>-- - Decrement <name>'s point
+      scorekeeper - Show scoreboard
+      show scoreboard - Show scoreboard
+      scorekeeper <name> - Show current point of <name>
+      what's the score of <name> - Show current point of <name>
+
+  - name: rodent motivation
+    section: *alias_dummy
+    desc: |
+      - Set the environment variable HUBOT_SHIP_EXTRA_SQUIRRELS (to anything) for additional motivation
+
+  - name: listen to user mentions
+    section: *alias_dummy
+    desc: Listen to User mentions
+
+  - name: youtube video searches
+    section: *alias_fun
+    desc: |
+      Youtube Video Search
+
+  - name: grab xkcd comic image urls
+    section: *alias_fun
+    desc: Grab XKCD Comic Image URLs
+
+  - name: make me a channel 
+    section: *alias_kanboard
+    desc: CHANNELNAME - create a chat channel (limited to authorized users)
+    hidden: true
+
+  - name: nmap 
+    section: *alias_pentesting
+    desc: help - Prints quick usage help
+    detail: |
+      Usage: nmap <quick|full> <target_IP(s)> <project_name*> - Launches nmap scan against the given target. Pushes results to Gitlabs after sucessful run. Use 'nosave' as project name to bypass Gitlab (do scan only, return results to the RC)
+
+  - name: build  
+    section: *alias_kanboard
+    desc: <repository> <target> - Builds a .pdf file from <target> in <repository>. Builds a .pdf document of <type> based on files in <repository>. The file is stored in target/ of the specified repository
+    detail: |
+      Usage: build <type> <repository> [namespace=ros] [branch=master] [-v]
+      <type> Can be either report or quote
+      <repository> Specifies the name of the gitlab repository where the files needed to do the job are located.
+      [namespace]  This optional parameter refers to the gitlab user or group this repository is part of. Defaults to ros
+      [branch]     This optional parameter specifies which branch to use. Defaults to master.
+      [-v]         Specifying this flag will yield verbose output.
+
+  - name: convert  
+    section: *alias_dummy
+    desc: <repo> <target> - Builds a .xml file from <target> in <repo>
+    detail: |
+      Converts gitlab issues in <respository> to xml files. The issues must be open and need to be labelled with either finding or non-finding.
+      Depending on the label, the xml files will be put in either the finding/ or non-finding/ directory in the repository.
+      Usage: convert <repository> [--closed] [--dry-run] [--issues] [--projects] [-v|--verbose] [-y]
+      <repository>   Specifies the name of the gitlab repository where the files needed to do the job are located.
+      [--closed]     If specified, will include closed issues
+      [--dry-run]    If specified, will not write xml files, but only displays output on screen
+      [--issues]     If specified, will list issues in given <repository>
+      [--projects]   If specified, will list gitlab repositories
+      [-v|--verbose] If specified, will yield verbose output
+      [-y]           Assumes yes on all questions
+
+  - name: invoice
+    section: *alias_dummy
+    desc: <repo> <target> - Builds pdf invoice from quote
+
+  - name: quickscope
+    section: *alias_dummy
+    desc: <repo> <namespace> [branch=MASTER] - Converts quickscope into quotation
+
+  - name: startpentest
+    section: *alias_pentesting
+    desc: Bootstraps a pentest
+
+  - name: validate 
+    section: *alias_dummy
+    desc: <parms..> - Validates a report/quotation
+    detail: |
+      Usage: validate <repository> [-a|-all] [--autofix] [-c|--capitalization] [--debug] [--edit] [--learn] [--long] [--offer] [--spelling] [-v|--verbose] [--no-report] [--quiet]
+      <repository>   Specifies the name of the gitlab repository where the files needed to do the job are located.
+      [-a|-all]             Perform all checks
+      [--autofix]           Try to automatically correct issues
+      [-c|--capitalization] Check capitalization
+      [--debug]             Show debug information
+      [--edit]              Open files with issues using an editor
+      [--learn]             Store all unknown words in dictionary file
+      [--long]              Check for long lines
+      [--offer]             Validate offer master file
+      [--spelling]          Check spelling
+      [-v|--verbose]        If specified, will yield verbose output
+      [--no-report]         Do not validate report master file
+      [--quiet]             Don't output status messages
+
+  - name: usage
+    section: *alias_dummy
+    desc: <command> - Displays usage information for command. If no command is specified, supported commands are displayed
+
+  - name: checklist
+    section: *alias_dummy
+    desc: <checklist|toggle>- The \"checklist\" family of commands are used to manipulate the checklist of a kanboard task
+    detail: |
+      checklist show
+        Shows the checklist for the column the kanboard task is in. It is required that the task's description contains the full checklist.
+        The script will connect to kanboard, open the Pentesting project and tries to find the kanboard task. It will then pull the description
+        and look for the checklist associated with the column the task is in.
+        Usage: checklist show <kanboard task>
+        <kanboard task>   Specifies the title of the kanboard task. This should be an exact match and is mandatory.
+       
+      checklist toggle
+        Pulls the checklist from the kanboard task's description and toggles its items
+        Usage: checklist toggle <kanboard task> <index>
+        <kanboard task>   Specifies the title of the kanboard task. This should be an exact match and is mandatory.
+        <index>           Should be an integer or comma separated list of integers as indices to the items. Mandatory
+
+  - name: column
+    section: *alias_dummy
+    desc: |
+      <show|next|prev>
+      The \"column\" family of commands are used to move a kanboard task across the board.
+      The following commands are implemented:
+      * column show      Shows the column the kanboard task is in
+      * column next      Moves the kanboard task to the next column
+      * column prev      Moves the kanboard task to the previous column
+    detail: |
+      column show
+        Shows the column the kanboard task is currently in.
+        Usage: column show <kanboard task>
+        <kanboard task>   Specifies the title of the kanboard task. This should be an exact match and is mandatory.
+      
+      column next
+        Moves the kanboard task to the next column.
+        Usage: column next <kanboard task>
+        <kanboard task>   Specifies the title of the kanboard task. This should be an exact match and is mandatory.
+      
+      column prev
+        Moves the kanboard task to the previous column.
+        Usage: column prev <kanboard task>
+        <kanboard task>   Specifies the title of the kanboard task. This should be an exact match and is mandatory.
+
+
+  - name: make an issue
+    section: *alias_dummy
+    desc: DESCRIPTIVE TEXT - creates a git issue related to the current channel
+
+  - name: cvesearch 
+    section: *alias_dummy
+    desc: PRODUCT - searches CVE database for a product
+
+  - name: cve 
+    section: *alias_dummy
+    desc: Cve2 handler (TODO)
+
+  - name: passwordstatus 
+    section: *alias_dummy
+    desc:  Checking user password status (PROPOSITION)
+
+  - name: passwordshow
+    section: *alias_dummy
+    desc:  Show user password (PROPOSITION)
+
+  - name: archive the chat log
+    section: *alias_dummy
+    desc:  CHANNELNAME - creates a text dump of all the chat in CHANNELNAME in the git repo with the same name (limited to authorized users)
+
+  - name: regenerate onboarding manual
+    section: *alias_dummy
+    desc: |
+      - onboardingmanual handler (PROPOSITION)
+
+  - name: rainbowtables algorithm hash
+    section: *alias_dummy
+    desc: |
+      - tries to find the hash in the available rainbowtables
+
+  - name: shellcmd grabimage url 
+    section: *alias_dummy
+    desc: |
+      - turns a web page into a picture
+    detail: Supply  grabimage url
+
+  - name: availability
+    section: *alias_dummy
+    desc:  (date expression) - shows who is available and what they're doing
+
+  - name: kanboardcomment
+    section: *alias_dummy
+    desc:  DESCRIPTIVE TEXT - add a comment to the kanboard item related to the current channel
+
+  - name: kanboardinfo
+    section: *alias_kanboard
+    desc:  COUNT - show the last COUNT comments from the kanboard item related to the current channel
+
+  # - name: kanboardinfo
+  #   desc:  \- Get info from kanboard (PROPOSITION)
+
+  # - name: kanboardinfo
+  #   section: *alias_kanboard
+  #   desc: COUNT - show the last COUNT comments from
+
+  - name: shellcmd buildwebsite
+    section: *alias_dummy
+    desc: |
+      - pull the most recent website version from github and install it
+
+  - name: charge
+    section: *alias_dummy
+    desc:  1.0  - register a number of hours (decimal point if you do fractions please) for this channel
+
+  - name: you are a little slow
+    section: *alias_dummy
+    desc:  setTimeout test (PROPOSITION) 
+
+  - name: scan
+    section: *alias_pentesting
+    desc:  Usage - scan IP
+
+  - name: startofferte
+    section: *alias_offerte
+    desc:  clientname-projectname \- Creates a chat channel, git repo, and kanboard item and prefills it with a basic set of information to get the quote process started
+
+  # - name: startofferte 
+  #   section: *alias_dummy
+  #   desc: OFFERTENAME - create a channel, repo, kanboard for an offerte (limited to authorized users)
+
+
+  - name: kanboard
+    section: *alias_kanboard
+    desc: BOARDNAME - shows kanboard status
+
+  # - name: kanboard
+  #   section: *alias_kanboard
+  #   desc: |
+  #     - Get status from kanboard (PROPOSITION)
+
+  - name: kanboardstatus 
+    section: *alias_dummy
+    desc:  shows kanboard task list
+
+  - name: chargehere
+    section: *alias_dummy
+    desc:  PARAM - Charge handler (TODO)
+
+  - name: chargelist
+    section: *alias_dummy
+    desc: |
+      - show all charges registered to this channel
+
+  - name: testAI
+    section: *alias_dummy
+    desc: |
+      - Testing AI (TODO)
+
+  - name: md5
+    section: *alias_hashing
+    desc:  ( me) <string> - Generate hash of <string>
+
+  - name: SHA
+    section: *alias_hashing
+    desc:  ( me) <string> - Generate hash of <string>
+
+  - name: SHA1
+    section: *alias_hashing
+    desc:  ( me) <string> - Generate hash of <string>
+
+  - name: SHA512
+    section: *alias_hashing
+    desc:  ( me) <string> - Generate hash of <string>
+
+  - name: SHA256
+    section: *alias_hashing
+    desc:  ( me) <string> - Generate hash of <string>
+
+  - name: RMD160 
+    section: *alias_hashing
+    desc:  ( me) <string> - Generate hash of <string>
+
+  - name: discuss
+    section: *alias_dummy
+    desc: |
+      - conversation (PROPOSITION)
+    detail: |
+      discuss (with me)
+        Creates a new conversation
+      
+      discuss cancel
+        Cancels the conversation
+      
+      discuss goodbye
+        Cancels the conversation
+      
+      talk (with/to me)
+       Creates a new conversation
+      
+      sst
+        Cancels the conversation
+

@@ -1,0 +1,56 @@
+<?php
+
+require "JSONclient.php";
+
+function custom_sort($a,$b) {
+          return $a['column_id']>$b['column_id'];
+     }
+
+function getAllTasks($projectName = "Offerte")
+{
+
+
+$client = new JsonRPC\Client('http://10.1.1.4/jsonrpc.php');
+$client->authentication('jsonrpc', getenv('KB_APIKEY'));
+
+
+
+	$proj = $client->getProjectByName($projectName);
+
+	if (is_array($proj))
+	{
+
+		$proj_id = $proj['id'];
+		$tasks = [];
+		try {
+			$tasks = $client->getAllTasks($proj_id,1);
+		} catch (Exception $e) {}
+	     usort($tasks, "custom_sort");
+     // Define the custom sort function
+     	$old_col= 0 ;
+     	$col_name= "";
+		foreach($tasks as $task)
+		{
+			print $task["title"] . "\n";
+			if ($old_col <> $task["column_id"])
+			{
+				$col_name = $client->getColumn($task["column_id"])['title'];
+				$old_col = $task["column_id"];
+			}
+
+			print   "In column:  $col_name \n";
+			try {
+				print "Owner: " . $client->getUser($task["owner_id"])['username'];
+			} catch (Exception $e) {}
+			print "\n ";
+			print "URL: " . $task["url"]. "\n";
+
+			print "\n";
+
+		}
+	
+	} else print "nothing known";// . __LINE__;
+}
+
+
+getAllTasks($argv[1]);

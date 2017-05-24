@@ -1,0 +1,112 @@
+#!/bin/bash
+
+# handler_onboardingmanual - builds PDF version of onboarding manual from markdown
+
+VERSION=0.1
+FOLLOWMARKDOWN=/opt/rosbot/myhubot/bin/followMarkdown
+PANDOC=/usr/bin/pandoc
+TEMPLOC=$(mktemp -d)
+
+
+
+# These variables should be set environment-specific
+[ -z $GITSERVER ] && GITSERVER=gitlab.local
+[ -z $GITWEB ] && GITWEB=https://${GITSERVER}
+
+NAMESPACE="ros"
+REPO="General_Info"
+BRANCH=master
+
+OMDIRS="Onboarding_manuals Onboarding_customers"
+ROOTMD="README.md"
+TARGETMD="onboarding_manual_full.md"
+TARGETPDF="onboarding_manual_full.pdf"
+TEMPLATE_DIR="/opt/repositories_for_email_notes/templates"
+
+trap cleanup EXIT QUIT
+
+# Make sure that the temporary files are always removed
+cleanup() {
+    trap '' EXIT INT QUIT
+    [ -d $TEMPLOC ] && rm -rf $TEMPLOC &>/dev/null
+    exit
+}
+
+# Clones repo using global (!) variables - v0.2
+clone_repo() {
+    pushd $TEMPLOC 1>/dev/null
+    git clone -b $BRANCH --depth=1 -q ssh://git@${GITSERVER}/${NAMESPACE}/${REPO}.git &>/dev/null
+    if [ ! -d $TEMPLOC/$REPO ]; then
+        echo "[-] could not clone repo ${NAMESPACE}/${REPO}"
+        exit 1
+    else
+        cd $REPO
+    fi
+}
+
+# Preflight checks using global (!) variables - v0.2
+preflight_checks() {
+    if [ ! -f "${FOLLOWMARKDOWN}" ]; then
+        echo "[-] this script needs the followMarkdown tool (${FOLLOWMARKDOWN})"
+    fi
+    if [ ! -f "${PANDOC}" ]; then
+        echo "[-] this script needs the pandoc program (${PANDOC})"
+    fi
+}
+
+build() {
+    OMDIR=$1
+    TARGETPDFPATH="${OMDIR}/${TARGETPDF}"
+
+    if [ ! -d "${OMDIR}" ]; then
+        echo "[-] directory ${OMDIR} not found"
+        exit 1
+    fi
+    pushd "${OMDIR}" &>/dev/null
+    
+    "${FOLLOWMARKDOWN}" "${ROOTMD}" "${TARGETMD}"
+    if [[ $? -ne 0 ]]; then
+        echo "[-] Sorry, followMarkdown failed."
+        exit 1
+    fi
+
+    cp -r ${TEMPLATE_DIR}/latex/* ./
+    TEMPLATE="./onboarding_manual.tex"
+    "${PANDOC}" -o "${TARGETPDF}" "--template=${TEMPLATE}" --latex-engine=xelatex "${TARGETMD}"
+    if [[ $? -ne 0 ]]; then
+        echo "[-] Sorry, pandoc failed."
+        exit 1
+    fi
+    popd &>/dev/null
+    if [ ! -f "${TARGETPDFPATH}" ]; then
+        echo "[-] hmmm... failed to build PDF file (could not find ${TARGETPDFPATH})"
+        exit 1
+    fi
+}
+
+add_to_repo() {
+    OMDIR=$1
+    TARGETPDFPATH="${OMDIR}/${TARGETPDF}"
+    git add "${TARGETPDFPATH}"
+}
+
+commit_to_repo() {
+    git commit -q -m "Onboarding manual proudly manufactured using ChatOps" &>/dev/null
+    git push -q >/dev/null
+}
+
+preflight_checks
+echo "regenerate onboarding manual version v$VERSION - Rocking your world, one build at a time..."
+clone_repo
+for d in $OMDIRS
+do
+    build "${d}"
+    add_to_repo "${d}"
+done
+commit_to_repo
+for d in $OMDIRS
+do
+    TARGETPDFPATH="${d}/${TARGETPDF}"
+    echo "[+] listo! Check out $GITWEB/$NAMESPACE/$REPO/raw/$BRANCH/$TARGETPDFPATH"
+done
+exit 0

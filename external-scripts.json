@@ -1,0 +1,15 @@
+[
+  "hubot-privilege",
+  "hubot-praise",
+  "hubot-diagnostics",
+  "hubot-script-shellcmd",
+  "hubot-google-images",
+  "hubot-remind-advanced",
+  "hubot-tell",
+  "hubot-google-translate",
+  "hubot-pugme",
+  "hubot-maps",
+  "hubot-redis-brain",
+  "hubot-rules",
+  "hubot-reload-scripts"
+]

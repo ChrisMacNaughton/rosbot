@@ -1,0 +1,9 @@
+#!/bin/bash 
+SELF_PATH="$(dirname "$(readlink -f "$0")")"; cd $SELF_PATH;
+TMPFILE="/tmp/.handler.$(whoami)"
+DEBUG=1
+
+echo "[+] Sending command to Kali VM"
+/usr/bin/ssh 10.1.1.21 $1 $2 
+
+exit 0

@@ -1,0 +1,7 @@
+node_modules
+.DS_Store*
+*.pyc
+.hubot_history
+/secrets.sh
+/php/handlers/vendor
+/scripts/acl.yml
