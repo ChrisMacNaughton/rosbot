@@ -244,7 +244,6 @@ module.exports = (robot) ->
     run_cmd cmd, args, (text) -> msg.send text.replace("\n","");
 
   robot.respond /startpentest (.*)/i, id:'chatops.startpentest', (msg) ->
-    msg.match[0] = msg.match[0].replace(/^[a-z0-9]+$/i);
     msg.match.shift();
     args = msg.match[0].split(" ");
     if args[0].substring(0, 4) == "off-"
@@ -256,9 +255,9 @@ module.exports = (robot) ->
     projectName = args[0];
     msg.send ('Starting new pentest ' + projectName + '...')
     cmd = '/usr/bin/php';
-    args = ['-f', 'php/handlers/startpentest.php', '--'];
-    args.push projectName;
-    run_cmd cmd, args, (text) -> msg.send text;
+    phpargs = ['-f', 'php/handlers/startpentest.php', '--'];
+    cmdargs = phpargs.concat args
+    run_cmd cmd, cmdargs, (text) -> msg.send text;
 
   robot.respond /startquote (.*)/i, id:'chatops.startquote',(msg) ->
 # Usage: startquote {clientname}. Creates a chat channel, git repo, and kanboard item and prefills it with a basic set of information to get the quote process started
