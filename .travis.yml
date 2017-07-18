@@ -12,4 +12,4 @@ jobs:
     - stage: docs
       script: tox -edocs
     - stage: test
-      script: tox -epy27,py35
+      script: tox -epy35

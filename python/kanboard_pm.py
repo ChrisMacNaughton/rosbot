@@ -1,11 +1,12 @@
 #!/usr/bin/env python
-def error(message):
-    sys.stderr.write("[!] %s\n" % message)
-
 import sys
 import os
 import tempfile
 from urllib2 import URLError
+
+
+def error(message):
+    sys.stderr.write("[!] %s\n" % message)
 
 try:
     from kanboard import Kanboard
@@ -16,26 +17,31 @@ except ImportError:
 
 
 class Column:
+
     def __init__(self, id, position, title):
-        self.id =id
+        self.id = id
         self.title = title
         self.position = position
 
+
 class KanboardAdapter():
+
     def __init__(self, project_name, task_name):
         self.kb = Kanboard(kb_endpoint, kb_user, kb_apikey, "X-API-Auth")
         self.project_name = project_name
-        self.task         = None
-        self.columns       = None
+        self.task = None
+        self.columns = None
 
         # This pulls in the Kanboard project ("Pentesting" as of yet)
         self.kbb_project = self.kb.get_project_by_name(name=self.project_name)
         if not self.kbb_project:
-            error("Could not find the *%s* project in Kanboard. Verify endpoint." % self.project_name)
+            error("Could not find the *%s* project in Kanboard. Verify endpoint." %
+                  self.project_name)
             exit(-1)
 
         # This pulls in the task that will be manipulated
-        tasks = self.kb.search_tasks(project_id=self.kbb_project["id"], query="title:%s" % task_name)
+        tasks = self.kb.search_tasks(project_id=self.kbb_project[
+                                     "id"], query="title:%s" % task_name)
         if len(tasks) == 0:
             error("Could not find kanboard task with the title: %s" % task_name)
             exit(-1)
@@ -48,14 +54,16 @@ class KanboardAdapter():
             exit(-1)
 
         self.description = task["description"].split("\r\n")
-        # At this point the kbb project, the task and the description are loaded
+        # At this point the kbb project, the task and the description are
+        # loaded
 
     def get_columns(self):
-        columns    = self.kb.get_columns(project_id=self.kbb_project["id"])
+        columns = self.kb.get_columns(project_id=self.kbb_project["id"])
 
         self.columns = dict()
         for column in columns:
-            self.columns[int(column["id"])] = Column(int(column["id"]), int(column["position"]), column["title"])
+            self.columns[int(column["id"])] = Column(
+                int(column["id"]), int(column["position"]), column["title"])
 
         return self.columns
 
@@ -63,7 +71,8 @@ class KanboardAdapter():
         if not self.columns:
             self.get_columns()
 
-        column_id = int(self.task["column_id"]) # Make sure this is cast to int, otherwise comparison might go wrong
+        # Make sure this is cast to int, otherwise comparison might go wrong
+        column_id = int(self.task["column_id"])
 
         for id in self.columns:
             if id == column_id:
@@ -71,9 +80,9 @@ class KanboardAdapter():
 
         error("Could not determine the current column of the project")
 
-
     def update_column(self, column):
-        result = self.kb.move_task_position(project_id=self.kbb_project["id"], task_id=self.task["id"], column_id=column.id, position=1)
+        result = self.kb.move_task_position(project_id=self.kbb_project[
+                                            "id"], task_id=self.task["id"], column_id=column.id, position=1)
         if not result:
             error("Unable to update column")
 
@@ -98,7 +107,8 @@ class KanboardAdapter():
 
         # Loop through each line in the description
         for line in self.description:
-            # Did we find the heading we're looking for? Start recording all subsequent lines
+            # Did we find the heading we're looking for? Start recording all
+            # subsequent lines
             if line.find(heading) is not -1:
                 found = True
                 record = True
@@ -110,22 +120,27 @@ class KanboardAdapter():
 
             # Add line to the checklist and update the index
             if record:
-                checklist[index] = self.description.index(line), line  # Tuple that stores the index to the line in the description + the line itself
+                # Tuple that stores the index to the line in the description +
+                # the line itself
+                checklist[index] = self.description.index(line), line
                 index += 1
 
         if found is False:
             if checklist_template_url:
-                error("Could not find the checklist for *%s* in kanboard task *%s*. Verify in kanboard if the task description contains the pentest checklist, which can be found here: %s" %
-                    (column.title, self.task["title"], checklist_template_url))
+                error("Could not find the checklist for *%s* in kanboard task *%s*. Verify in kanboard if"
+                      "the task description contains the pentest checklist, which can be found here: %s" %
+                      (column.title, self.task["title"], checklist_template_url))
             else:
-                error("Could not find the checklist for column: *%s* in kanboard task *%s*" % (column.title, self.task["title"]))
+                error("Could not find the checklist for column: *%s* in kanboard task *%s*" %
+                      (column.title, self.task["title"]))
             exit(-1)
 
         return checklist
 
     def save_checklist_backup(self):
         # Save description in temp dir before changing
-        _, filename = tempfile.mkstemp(prefix="checklist_%s_" % self.task["title"])
+        _, filename = tempfile.mkstemp(
+            prefix="checklist_%s_" % self.task["title"])
 
         f = open(filename, "w")
         f.write("\n".join(self.description))
@@ -141,12 +156,13 @@ def checklist_show():
     column = adapter.get_column()
     checklist = adapter.get_checklist_of_column(column)
 
-    print "Checklist for current column: *%s*" % column.title
+    print("Checklist for current column: *%s*" % column.title)
 
     if len(checklist) > 0:
         for key, item in checklist.iteritems():
             key = str(key) + ":"
-            print "%s %s" % (str(key).ljust(3, ' '), item[1]) # 0 is index to line in description, 1 is line content
+            # 0 is index to line in description, 1 is line content
+            print "%s %s" % (str(key).ljust(3, ' '), item[1])
     else:
         print "- This checklist has no items."
 
@@ -156,7 +172,7 @@ def checklist_toggle(indices):
      Toggles certain checklist item(s). This function only eats integers. Proper validation should have been done upsteam.
      :param indices list
     '''
-    column     = adapter.get_column()
+    column = adapter.get_column()
     checklist = adapter.get_checklist_of_column(column)
     output = []
 
@@ -172,12 +188,13 @@ def checklist_toggle(indices):
         # item is a tuple
         item = checklist[index]
 
-        line_index   = item[0] # Index to settings
-        line_content = item[1] # Actual content
+        line_index = item[0]  # Index to settings
+        line_content = item[1]  # Actual content
 
         # Validation of the item
         if item[1].find("[X]") == -1 and item[1].find("[ ]") == -1:
-            error("Could not find checkbox for item: %s. Make sure this item contains either [ ] or [X] by editing the kanboard task description directly" % item[1])
+            error(
+                "Could not find checkbox for item: %s. Make sure this item contains either [ ] or [X] by editing the kanboard task description directly" % item[1])
             exit(-1)
 
         # Actual toggling
@@ -195,10 +212,11 @@ def checklist_toggle(indices):
     adapter.save_project_description()
     print "\n".join(output)
 
+
 def column_show():
     global adapter
 
-    columns    = adapter.get_columns()
+    columns = adapter.get_columns()
     cur_column = adapter.get_column()
 
     for column_id in columns:
@@ -220,12 +238,12 @@ def change_column(direction):
     '''
     global adapter
 
-    columns    = adapter.get_columns()
+    columns = adapter.get_columns()
     cur_column = adapter.get_column()
 
     # Get the id of the column with the lowest and highest position
     highest_column = None
-    lowest_column  = None
+    lowest_column = None
 
     for id in columns:
         if not highest_column:
@@ -237,7 +255,6 @@ def change_column(direction):
             highest_column = columns[id]
         if columns[id].position < lowest_column.position:
             lowest_column = columns[id]
-
 
     if cur_column.id == highest_column.id and direction == 1:
         print "This project is in its final column."
@@ -290,6 +307,7 @@ def validate_env_vars():
     if None in [kb_user, kb_apikey, kb_endpoint]:
         exit(-1)
 
+
 def process_cmdline_arguments(args):
     ''' Validate command line arguments.
     Fills the following global variables:
@@ -308,7 +326,7 @@ def process_cmdline_arguments(args):
         exit(1)
 
     kanboard_task = args[0]
-    command       = args[1]
+    command = args[1]
 
     if not kanboard_task:
         error("Please specify a kanboard task title")
@@ -328,12 +346,14 @@ def process_cmdline_arguments(args):
             sub_command = args[2]
 
         if sub_command not in sub_commands:
-            error("Please specify one of the following sub-commands: %s" % '|'.join(sub_commands))
+            error("Please specify one of the following sub-commands: %s" %
+                  '|'.join(sub_commands))
             exit(-1)
 
         if sub_command == "toggle":
             if len(args) != 4:
-                error("Please specify a comma separated listof indices as argument to this command")
+                error(
+                    "Please specify a comma separated listof indices as argument to this command")
                 exit(-1)
 
             argument = args[3]
@@ -345,7 +365,8 @@ def process_cmdline_arguments(args):
             sub_command = args[2]
 
         if sub_command not in sub_commands:
-            error("Please specify one of the following sub-commands: %s" % '|'.join(sub_commands))
+            error("Please specify one of the following sub-commands: %s" %
+                  '|'.join(sub_commands))
             exit(2)
 
 
@@ -372,9 +393,9 @@ kanboard_task = None
 command = None
 sub_command = None
 argument = None
-kb_endpoint            = os.environ.get("KB_ENDPOINT")
-kb_user                = os.environ.get("KB_USER")
-kb_apikey              = os.environ.get("KB_APIKEY")
+kb_endpoint = os.environ.get("KB_ENDPOINT")
+kb_user = os.environ.get("KB_USER")
+kb_apikey = os.environ.get("KB_APIKEY")
 checklist_template_url = os.environ.get("CHECKLIST_TEMPLATE_URL")
 
 try:
@@ -401,16 +422,9 @@ try:
             column_previous()
 
 except URLError as e:
-    error("An exception has occured while initializing the kanboard adapter: [%s]. Please check the required environment variables." % (e.reason))
+    error("An exception has occured while initializing the kanboard adapter: [%s]. Please check the required environment variables." % (
+        e.reason))
     exit(-1)
 except Exception as e:
     error("A general exception has occured: [%s]." % (e.message))
     exit(-1)
-
-
-
-
-
-
-
-

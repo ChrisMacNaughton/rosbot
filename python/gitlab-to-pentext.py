@@ -54,7 +54,8 @@ class BaseItem(object):
 
     def __init__(self, item_type):
         if item_type not in ('finding', 'non-finding'):
-            raise ValueError('Only finding and non-finding are currently supported')
+            raise ValueError(
+                'Only finding and non-finding are currently supported')
         self.item_type = item_type
         self.__path = '{0}s'.format(self.item_type)
         self.root_open = '<{0}>\n'.format(self.item_type)
@@ -116,9 +117,9 @@ class Finding(BaseItem):
                                                                                     self.threat_level,
                                                                                     self.finding_type)
         self.content = self.element('description') + \
-                       self.element('technicaldescription') + \
-                       self.element('impact') + \
-                       self.element('recommendation')
+            self.element('technicaldescription') + \
+            self.element('impact') + \
+            self.element('recommendation')
         return BaseItem.__str__(self)
 
 
@@ -145,11 +146,14 @@ def from_issue(issue):
         for note in [x for x in reversed(issue.notes.list()) if not x.system]:
             if len(note.body.splitlines()):
                 if 'impact' in note.body.split()[0].lower():
-                    item.impact = convert_text(''.join(note.body.splitlines(True)[1:]))
+                    item.impact = convert_text(
+                        ''.join(note.body.splitlines(True)[1:]))
                 elif 'recommendation' in note.body.split()[0].lower():
-                    item.recommendation = convert_text(''.join(note.body.splitlines(True)[1:]))
+                    item.recommendation = convert_text(
+                        ''.join(note.body.splitlines(True)[1:]))
                 else:
-                    item.technicaldescription += u'{0}\n'.format(convert_text(note.body))
+                    item.technicaldescription += u'{0}\n'.format(
+                        convert_text(note.body))
     elif 'non-finding' in [x.lower() for x in issue.labels]:
         item = NonFinding()
         for note in [x for x in reversed(issue.notes.list()) if not x.system]:
@@ -261,7 +265,8 @@ def preflight_checks():
         print_error('could not connect {0}'.format(exception), -1)
     for path in ('findings', 'non-findings'):
         if not os.path.isdir(path):
-            print_error('Path {0} does not exist: Is this a Pentext repository ?'.format(path), -1)
+            print_error(
+                'Path {0} does not exist: Is this a Pentext repository ?'.format(path), -1)
     return gitserver
 
 
