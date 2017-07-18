@@ -1,0 +1,15 @@
+dist: trusty
+language: python
+
+notifications:
+  email: false
+sudo: false
+
+jobs:
+  include:
+    - stage: style
+    script: tox -epep8
+    - stage: docs
+    script: tox -edocs
+    - stage: test
+    script: tox -epy27,py35

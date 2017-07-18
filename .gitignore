@@ -5,3 +5,4 @@ node_modules
 /secrets.sh
 /php/handlers/vendor
 /scripts/acl.yml
+.tox
