@@ -8,8 +8,8 @@ sudo: false
 jobs:
   include:
     - stage: style
-    script: tox -epep8
+      script: tox -epep8
     - stage: docs
-    script: tox -edocs
+      script: tox -edocs
     - stage: test
-    script: tox -epy27,py35
+      script: tox -epy27,py35
