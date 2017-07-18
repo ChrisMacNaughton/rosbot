@@ -178,7 +178,8 @@ output_temp = "/tmp/rosbot_scans/"+target_project+"/"+time_stamped_dir+"/"
 try:
     os.makedirs(output_temp)
 except:
-    print "Nmap output directory already exists. Someone just recently (within the same minute) launched a scan for this target. Wait for that scan to finish or at least wait one minute before running the scan again"
+    print "Nmap output directory already exists. Someone just recently (within the same minute) launched a scan"
+    "for this target. Wait for that scan to finish or at least wait one minute before running the scan again"
     sys.exit()
 args.extend(["-oA", output_temp+scan_type])
 

@@ -23,6 +23,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import argparse
+from importlib import reload
 import logging
 import mmap
 import os
@@ -164,7 +165,7 @@ def validate_spelling(tree, filename, options, speller):
     try:
         root = tree.getroot()
         for section in root.iter():
-            if section.text and isinstance(section.tag, basestring) and \
+            if section.text and isinstance(section.tag, str) and \
                section.tag not in ('a', 'code', 'monospace', 'pre'):
                 for word in re.findall('([a-zA-Z]+\'?[a-zA-Z]+)', section.text):
                     if not speller.check(word):
@@ -514,7 +515,6 @@ def add_include(filename, identifier, findings):
     """
     tree = ElementTree.parse(
         filename, ElementTree.XMLParser(strip_cdata=False))
-    root = tree.getroot()
     for section in tree.iter('section'):
         if section.attrib['id'] == identifier:
             finding_section = section

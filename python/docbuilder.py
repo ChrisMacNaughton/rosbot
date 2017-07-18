@@ -98,8 +98,12 @@ the Free Software Foundation, either version 3 of the License, or
                 print(arg, end="", file=sys.stderr)
             print(file=sys.stderr)
     else:
-        verboseprint = lambda *a: None
-        verboseerror = lambda *a: None
+        def verboseprint(*args):  # pylint: disable=missing-docstring
+            pass
+
+        def verboseerror(*args):  # pylint: disable=missing-docstring
+            pass
+
     return vars(parser.parse_args())
 
 
@@ -108,9 +112,9 @@ def print_output(stdout, stderr):
     Prints out standard out and standard err using the verboseprint function.
     """
     if stdout:
-        verboseprint('[+] stdout: {0}'.format(stdout))
+        verboseprint('[+] stdout: {0}'.format(stdout))  # noqa F821
     if stderr:
-        verboseerror('[-] stderr: {0}'.format(stderr))
+        verboseerror('[-] stderr: {0}'.format(stderr))  # noqa F821
 
 
 def change_tag(fop):
@@ -160,7 +164,7 @@ def to_pdf(options):
     cmd = [options['fop_binary'], '-c', options['fop_config'], options['fop'],
            options['output']]
     try:
-        verboseprint('Converting {0} to {1}'.format(options['fop'],
+        verboseprint('Converting {0} to {1}'.format(options['fop'],  # noqa F821
                                                     options['output']))
         process = subprocess.Popen(cmd, stdout=PIPE, stderr=PIPE)
         stdout, stderr = process.communicate()
@@ -207,7 +211,7 @@ def main():
     if result:
         if OFFERTE in options['xslt']:  # an offerte can generate multiple fo's
             report_output = options['output']
-            verboseprint('generating separate waivers detected')
+            verboseprint('generating separate waivers detected')  # noqa F821
             output_dir = os.path.dirname(options['output'])
             fop_dir = os.path.dirname(options['fop'])
             try:

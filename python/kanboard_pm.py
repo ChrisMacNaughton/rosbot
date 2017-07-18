@@ -40,8 +40,8 @@ class KanboardAdapter():
             exit(-1)
 
         # This pulls in the task that will be manipulated
-        tasks = self.kb.search_tasks(project_id=self.kbb_project[
-                                     "id"], query="title:%s" % task_name)
+        tasks = self.kb.search_tasks(project_id=self.kbb_project["id"],
+                                     query="title:%s" % task_name)
         if len(tasks) == 0:
             error("Could not find kanboard task with the title: %s" % task_name)
             exit(-1)
@@ -162,9 +162,9 @@ def checklist_show():
         for key, item in checklist.iteritems():
             key = str(key) + ":"
             # 0 is index to line in description, 1 is line content
-            print "%s %s" % (str(key).ljust(3, ' '), item[1])
+            print("%s %s" % (str(key).ljust(3, ' '), item[1]))
     else:
-        print "- This checklist has no items."
+        print("- This checklist has no items.")
 
 
 def checklist_toggle(indices):
@@ -194,7 +194,8 @@ def checklist_toggle(indices):
         # Validation of the item
         if item[1].find("[X]") == -1 and item[1].find("[ ]") == -1:
             error(
-                "Could not find checkbox for item: %s. Make sure this item contains either [ ] or [X] by editing the kanboard task description directly" % item[1])
+                "Could not find checkbox for item: %s. Make sure this item contains either"
+                "[ ] or [X] by editing the kanboard task description directly" % item[1])
             exit(-1)
 
         # Actual toggling
@@ -210,7 +211,7 @@ def checklist_toggle(indices):
 
     # Save
     adapter.save_project_description()
-    print "\n".join(output)
+    print("\n".join(output))
 
 
 def column_show():
@@ -221,9 +222,9 @@ def column_show():
 
     for column_id in columns:
         if column_id == cur_column.id:
-            print "*%s*" % cur_column.title
+            print("*%s*" % cur_column.title)
         else:
-            print columns[column_id].title
+            print(columns[column_id].title)
 
 
 def change_column(direction):
@@ -257,11 +258,11 @@ def change_column(direction):
             lowest_column = columns[id]
 
     if cur_column.id == highest_column.id and direction == 1:
-        print "This project is in its final column."
+        print("This project is in its final column.")
         return
 
     if cur_column.id == lowest_column.id and direction == -1:
-        print "This project is in its first column."
+        print("This project is in its first column.")
         return
 
     next_position = cur_column.position + direction
@@ -272,7 +273,7 @@ def change_column(direction):
 
     adapter.update_column(next_column)
 
-    print "The project changed column from *%s* to *%s*" % (cur_column.title, next_column.title)
+    print("The project changed column from *%s* to *%s*" % (cur_column.title, next_column.title))
 
 
 def column_next():
