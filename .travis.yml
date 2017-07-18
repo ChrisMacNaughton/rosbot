@@ -13,9 +13,9 @@ install:
 
 jobs:
   include:
-    - stage: style
+    - stage: style + docs
       script: tox -epep8
-    - stage: docs
+    -
       script: tox -edocs
     - stage: test
       script: tox -epy35
