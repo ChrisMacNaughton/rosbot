@@ -5,9 +5,11 @@ notifications:
   email: false
 sudo: false
 
-insntall:
-- nvm install 0.10
-- npm install
+install:
+  - travis_retry pip install tox
+  - pip install codecov
+  - nvm install 0.10
+  - npm install
 
 jobs:
   include:
