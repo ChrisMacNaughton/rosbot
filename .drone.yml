@@ -2,10 +2,14 @@ pipeline:
   style + docs:
     image: python:3.5
     commands:
+      - pip install -q tox
+      - pip install -q codecov
       - tox -e pep8
       - tox -e docs
   unit:
     image: python:3.5
     commands:
+      - pip install -q tox
+      - pip install -q codecov
       - tox -e py27
       - tox -e py35
