@@ -1,11 +1,15 @@
 pipeline:
+  build:
+    image: python:3.5
+    commands:
+      - pip install tox
   style + docs:
     image: python:3.5
     commands:
       - tox -e pep8
       - tox -e docs
   unit:
-    image: python35
+    image: python:3.5
     commands:
-      - tox -e py34
+      - tox -e py27
       - tox -e py35
