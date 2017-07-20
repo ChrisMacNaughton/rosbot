@@ -1,0 +1,11 @@
+pipeline:
+  style + docs:
+    image: python35
+    commands:
+      - tox -e pep8
+      - tox -e docs
+  unit:
+    image: python35
+    commands:
+      - tox -e py34
+      - tox -e py35
