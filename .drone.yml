@@ -1,12 +1,22 @@
 image: python:3.5
 pipeline:
+<<<<<<< HEAD
   style + docs:
+||||||| e512a71... remove build
+  style + docs:
+    image: python:3.5
+=======
+  build:
+    image: python:3.5
+>>>>>>> parent of e512a71... remove build
     commands:
       - pip install tox
+  style + docs:
+    image: python:3.5
+    commands:
       - tox -e pep8
       - tox -e docs
   unit:
     commands:
-      - pip install tox
       - tox -e py27
       - tox -e py35
